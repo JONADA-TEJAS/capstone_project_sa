@@ -22,7 +22,7 @@ A real-time dynamic pricing engine for urban parking lots that uses machine lear
 ##  System Architecture
 
 ```mermaid
-graph TD
+
     A[Raw Dataset CSV] --> B[Data Cleaning + Feature Engineering]
     B --> C[clean_dataset_final.csv]
     C --> D[Pathway Streaming Engine]

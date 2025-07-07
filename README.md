@@ -1,4 +1,4 @@
-# **capstone_project_sa**
+# **Capstone_Project_sa**
 #  Dynamic Pricing for Urban Parking Lots
 
 

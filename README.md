@@ -9,7 +9,7 @@ A real-time dynamic pricing engine for urban parking lots that uses machine lear
 ##  Tech Stack
 
 | Category         | Tools Used                           |
-|------------------|---------------------------------------|
+|------------------|--------------------------------------|
 | Language         | Python 3                              |
 | Data Handling    | Pandas, NumPy                         |
 | Real-Time Engine | [Pathway](https://pathway.com)        |

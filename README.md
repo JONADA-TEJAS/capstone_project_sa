@@ -1,4 +1,4 @@
-# capstone_project_sa
+# **capstone_project_sa**
 #  Dynamic Pricing for Urban Parking Lots
 
 
@@ -134,7 +134,7 @@ Interactive Bokeh line chart for a selected parking lot:
 
 ##  Author
 
-**Tejas Teju**  
+**Jonada Tejas**  
  Data Science & Machine Learning Enthusiast  
  Email: [teju6342@gmail.com]
 

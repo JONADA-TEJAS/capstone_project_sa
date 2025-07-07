@@ -1,82 +1,107 @@
 # capstone_project_sa
 #  Dynamic Pricing for Urban Parking Lots
 
-This project presents an intelligent pricing system for urban parking lots using dynamic, demand-based, and competitive strategies. The goal is to **maximize revenue** while ensuring efficient parking distribution across the city.
+
+A real-time dynamic pricing engine for urban parking lots that uses machine learning and stream processing to optimize revenue. This project implements three pricing models — Linear, Demand-Based, and Competitive — using real-time data inputs like occupancy, traffic, and vehicle type.
 
 ---
 
-##  Problem Statement
+##  Tech Stack
 
-Urban parking is limited and often under-optimized. A static pricing system cannot account for:
-
-- Real-time occupancy
-- Local traffic conditions
-- Special events
-- Nearby lot competition
-
-Our goal: **Design dynamic pricing models that adapt in real-time** to these factors, maximizing revenue and balancing lot usage.
-
----
-
-##  Dataset
-
-- Source: Provided `.csv` file with ~58,000 parking entries.
-- Features:
-  - `SystemCodeNumber` (parking lot ID)
-  - `Latitude`, `Longitude`
-  - `Capacity`, `Occupancy`, `QueueLength`
-  - `VehicleType`, `TrafficConditionNearby`, `IsSpecialDay`
-  - Timestamps (`LastUpdatedDate`, `LastUpdatedTime`)
-
-We processed and merged these fields into a clean real-time-ready dataset (`clean_dataset_final.csv`).
+| Category         | Tools Used                           |
+|------------------|---------------------------------------|
+| Language         | Python 3                              |
+| Data Handling    | Pandas, NumPy                         |
+| Real-Time Engine | [Pathway](https://pathway.com)        |
+| Visualization    | Matplotlib, Bokeh                     |
+| Deployment (opt) | Jupyter Notebook / Colab              |
+| Data Format      | CSV (cleaned and streamed)            |
 
 ---
 
-##  Pricing Models Implemented
+##  System Architecture
 
-###  Model 1: Linear Occupancy-Based Pricing
-- Formula: `Price = Base + α × (Occupancy / Capacity)`
-- Simple, responsive to real-time usage
+```mermaid
+graph TD
+    A[Raw Dataset CSV] --> B[Data Cleaning + Feature Engineering]
+    B --> C[clean_dataset_final.csv]
+    C --> D[Pathway Streaming Engine]
 
-###  Model 2: Demand-Based Pricing
-- Factors:
-  - Occupancy rate
+    D --> E1[Model 1: Linear Pricing]
+    D --> E2[Model 2: Demand-Based Pricing]
+    D --> E3[Model 3: Competitive Pricing]
+
+    E1 --> F[output.csv]
+    E2 --> F
+    E3 --> G[model3_pricing_results.csv]
+
+    F --> H[Revenue Analysis]
+    G --> H
+    H --> I[Visualizations (Matplotlib + Bokeh)]
+    I --> J[README Report]
+```
+
+---
+
+##  Project Workflow
+
+### 1.  Data Cleaning
+- Combined date and time into a timestamp field
+- Encoded:
+  - `VehicleType` → numeric weight
+  - `TrafficConditionNearby` → {Low: 2, Average: 5, High: 8}
+- Final cleaned dataset saved as: `clean_dataset_final.csv`
+
+---
+
+### 2.  Pricing Models
+
+####  Model 1: Linear Pricing
+> `price = base_price + α × (occupancy / capacity)`
+
+- Fast and easy to interpret
+- Reacts directly to how full a lot is
+
+####  Model 2: Demand-Based Pricing
+> `price = base × (1 + 1.5 × normalized_demand)`
+
+- Combines:
+  - Occupancy
   - Queue length
   - Traffic level
-  - Vehicle type (Car, Bike, Truck)
-  - Special day
-- Formula: 
+  - Vehicle type
+  - Special day flag
 
-###  Model 3: Competitive Pricing
-- Enhances Model 2 by checking nearby lots (within 2 km)
-- If:
-- Lot is full and neighbors are cheaper → decrease price (encourage rerouting)
-- Neighbors are more expensive → increase price
-- Goal: simulate supply-demand competition across city
+####  Model 3: Competitive Pricing
+- Based on **Model 2**, but adds:
+  - Neighbor lot prices within **2 km**
+  - Rerouting logic:
+    - If current lot is full and cheaper options exist → reduce price
+    - If neighbors are more expensive → increase price
 
 ---
 
-##  Real-Time Streaming with Pathway
+### 3.  Real-Time Streaming with Pathway
 
-We used the **Pathway library** to simulate real-time streaming and compute prices live.
-
-- Parsed each row as a real-time event
-- Applied all 3 models on the fly
-- Output written to `/content/output.csv` for downstream evaluation
+- Simulated a real-time data pipeline using `pathway.io.csv.read()` in streaming mode
+- Each new row was priced using all 3 models on-the-fly
+- Output streamed to: `output.csv`
 
 ---
 
 ##  Revenue Evaluation
 
-We calculated revenue per lot and average revenue per model:
+Revenue per model was calculated as:  
+`revenue = price × occupancy`
 
-| Pricing Model | Average Revenue |
-|---------------|-----------------|
-| **Model 1**   | ₹8141.92         |
-| **Model 2**   | ₹7555.18         |
-| **Model 3**   | ₹7737.10         |
+| Model     | Avg Revenue |
+|-----------|-------------|
+| Model 1   | ₹8141.92    |
+| Model 2   | ₹7555.18    |
+| Model 3   | ₹7737.10    |
 
- Model 1 gave the highest average revenue, but **Model 3 is more fair and adaptable**, especially in real-world competitive settings.
+ **Model 1 had highest revenue**, but  
+ **Model 3 provides a balance between fairness, demand, and competitive response.**
 
 ---
 
@@ -84,56 +109,38 @@ We calculated revenue per lot and average revenue per model:
 
 ###  Revenue Comparison
 
-Bar chart showing average revenue per model:
+Bar chart showing average revenue across models:
 
-![image](https://github.com/user-attachments/assets/cbcfc35a-b885-40ad-9fb9-cf579170c07b)
-
-
-###  Bokeh Plot (Interactive)
-
-Dynamic price trends over time for a selected lot:
-
-![image](https://github.com/user-attachments/assets/86bd50cc-881a-40a2-9edc-a4839884aefc)
+![image](https://github.com/user-attachments/assets/738b084a-f3de-4cca-b5a9-b1ac985fe06d)
 
 
----
+###  Dynamic Pricing Over Time (Bokeh)
 
-##  Project Structure
+Interactive Bokeh line chart for a selected parking lot:
 
----
+![image](https://github.com/user-attachments/assets/2d6ce466-60ba-4d27-9fbb-4ca12277c572)
 
-##  Key Takeaways
 
-- Dynamic pricing boosts responsiveness and fairness
-- Model 2 reacts well to demand features
-- Model 3 introduces competition-aware pricing
-- Pathway enables scalable real-time execution
 
----
 
-##  Tools & Tech
+##  Future Work
 
--  Python, Pandas, NumPy
--  Pathway (real-time streaming)
--  Matplotlib, Bokeh (visualizations)
-
----
-
-##  Future Improvements
-
-- Incorporate weather and event APIs
-- Implement reinforcement learning (RL-based dynamic pricing)
-- Build a live Streamlit dashboard for monitoring
+- Incorporate **real-time traffic APIs**
+- Add **weather and event data**
+- Deploy as a **Streamlit dashboard**
+- Apply **reinforcement learning** for price optimization
 
 ---
 
 ##  Author
 
-** Jonada Tejas **  
-Data Science & ML Enthusiast  
- [teju6342@gmail.com]
+**Tejas Teju**  
+ Data Science & Machine Learning Enthusiast  
+ Email: [teju6342@gmail.com]
 
 ---
 
->  “Smart parking isn't just about finding a spot — it's about **dynamic, data-driven efficiency**.”
+> “Smart cities begin with smarter parking — driven by dynamic pricing intelligence.”
+
+
 

@@ -23,8 +23,8 @@ A real-time dynamic pricing engine for urban parking lots that uses machine lear
 
 ```mermaid
 graph TD
-    A[Raw Dataset CSV] --> B[Data Cleaning + Feature Engineering]
-    B --> C[clean_dataset_final.csv]
+    A[Raw Dataset CSV] --> B[Data Cleaning and Feature Engineering]
+    B --> C[Clean Dataset CSV]
     C --> D[Pathway Streaming Engine]
 
     D --> E1[Model 1: Linear Pricing]
@@ -37,7 +37,7 @@ graph TD
 
     F --> H[Revenue Analysis]
     G --> H
-    H --> I[Visualizations (Matplotlib + Bokeh)]
+    H --> I[Visualizations - Matplotlib and Bokeh]
     I --> J[README Report]
 ```
 
